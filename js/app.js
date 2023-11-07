@@ -2,7 +2,9 @@
 const leftImg = document.querySelector('section img:first-child');
 const middleImg = document.querySelector('section img:nth-child(2)');
 const lastImg = document.querySelector('section img:nth-child(3)');
+const showResultsButton = document.querySelector('button');
 let workingPhotos = [];
+const ulElem = document.querySelector('ul');
 let leftProduct = null;
 let middleProduct = null;
 let lastProduct = null;
@@ -10,7 +12,7 @@ let clickCtr = 0;
 let maxClicks = 25;
 
 
-function AssortedImage(name, src ) {
+function AssortedImage(name, src) {
   this.name = name;
   this.src = src;
   this.views = 0;
@@ -31,7 +33,7 @@ let pen = new AssortedImage('pen', 'img/assets lab 11/pen.jpg');
 let petsweep = new AssortedImage('petsweep', 'img/assets lab 11/pet-sweep.jpg');
 let scissors = new AssortedImage('scissors', 'img/assets lab 11/scissors.jpg');
 let shark = new AssortedImage('shark', 'img/assets lab 11/shark.jpg');
-let sweep = new AssortedImage('sweep', 'img/assets lab 11/sweep.jpg');
+let sweep = new AssortedImage('sweep', 'img/assets lab 11/sweep.png');
 let tauntaun = new AssortedImage('tauntaun', 'img/assets lab 11/tauntaun.jpg');
 let unicorn = new AssortedImage('unicorn', 'img/assets lab 11/unicorn.jpg');
 let watercan = new AssortedImage('watercan','img/assets lab 11/water-can.jpg');
@@ -48,7 +50,7 @@ shuffleArray(photos);
 function renderPhotos() { 
 // checkif clicks  has reached the max
   if(clickCtr == maxClicks) {
-    viewResults.addEventListener('click', handleViewResultsClick);
+    viewResults.addEventListener('click', handleResultsClick);
   
 
 // disable the images
@@ -64,22 +66,22 @@ if (workingPhotos.length <= 1) {
 
 // retrieves and removes the last item
 
-leftProduct = photos.pop(); 
+leftProduct = workingPhotos.pop(); 
 leftImg.setAttribute('src', leftProduct.src);
  
-middleProduct = photos.pop();
+middleProduct = workingPhotos.pop();
 middleImg.setAttribute('src', middleProduct.src);
 
-lastProduct = photos.pop();
+lastProduct = workingPhotos.pop();
 lastImg.setAttribute('src', lastProduct.src);
 
 
 leftProduct.views += 1; 
 middleProduct.views += 1;
-lastProduct.views =+ 1;
+lastProduct.views += 1;
 
 }
-// Fisher-Yates shuffle array 
+// Fisher-Yates shuffle array- ChatGPT 
 function shuffleArray(array) {
   for (let i = array.length - 1; i > 0; i--) {
     // Generate a random index from 0 to i
@@ -90,7 +92,7 @@ function shuffleArray(array) {
   }
 }
 function handleLeftClick() {
-  leftProductclicks += 1;
+  leftProduct.clicks += 1;
   renderPhotos();
 }
 function handleMiddleClick() {
@@ -101,6 +103,12 @@ function handleLastClick() {
   lastProduct.clicks += 1;
   renderPhotos();
 }
+
+function handleResultsClick() {
+  renderResults();
+}
+
+
 leftImg.addEventListener('click', handleLeftClick);
 middleImg.addEventListener('click', handleMiddleClick);
 lastImg.addEventListener('click', handleLastClick);
@@ -112,6 +120,11 @@ renderPhotos();
   const currentPhoto = photos[i];
   let result = `${currentPhoto.name} had ${currentPhoto.views} views and was clicked ${currentPhoto.clicks} times.`;
   console.log(result);
+  const liElement = document.createElement('li');
+  ulElem.appendChild(liElement);
+  liElement.textContent = result;
 
   }
-}
+}  
+
+
