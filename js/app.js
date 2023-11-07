@@ -6,6 +6,8 @@ let workingPhotos = [];
 let leftProduct = null;
 let middleProduct = null;
 let lastProduct = null;
+let clickCtr = 0;
+let maxClicks = 25;
 
 
 function AssortedImage(name, src ) {
@@ -73,8 +75,8 @@ lastImg.setAttribute('src', lastProduct.src);
 
 
 leftProduct.views += 1; 
-middleProduct.view += 1;
-lastProduct.view =+ 1;
+middleProduct.views += 1;
+lastProduct.views =+ 1;
 
 }
 // Fisher-Yates shuffle array 
@@ -109,7 +111,7 @@ renderPhotos();
   for (let i=0; i<photos.length; i++) {
   const currentPhoto = photos[i];
   let result = `${currentPhoto.name} had ${currentPhoto.views} views and was clicked ${currentPhoto.clicks} times.`;
-  console.log
+  console.log(result);
 
-}
+  }
 }
