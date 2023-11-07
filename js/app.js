@@ -8,32 +8,32 @@ let middleProduct = null;
 let lastProduct = null;
 
 
-function AssortedImage(name, src, ) {
+function AssortedImage(name, src ) {
   this.name = name;
   this.src = src;
   this.views = 0;
   this.clicks = 0;
 }
 
-let bag = new AssortedImage('bag', '.img/assets lab 11/bag.jpg' );
-let banana = new AssortedImage('banana', '.img/assets lab 11/banana.jpg');
-let bathroom = new AssortedImage('bathroom', '.img/assets lab 11/bathroom.jpg');
-let boots = new AssortedImage('boots', '.img/assets lab 11/boots.jpg' );
-let breakfast = new AssortedImage('breakfast', '.img/assets lab 11/breakfast.jpg');
-let bubblegum = new AssortedImage('bubblegum', '.img/assets lab 11/bubblegum.jpg');
-let chair = new AssortedImage('chair', '.img/assets lab 11/chair.jpg');
-let cthulhu = new AssortedImage('cthulhu', '.img/assets lab 11/cthulhu.jpg');
-let dogduck = new AssortedImage('dogduck', '.img/assets lab 11/dog-duck.jpg');
-let dragon = new AssortedImage('dragon', '.img/assets lab 11/dragon.jpg');
-let pen = new AssortedImage('pen', '.img/assets lab 11/pen.jpg');
-let petsweep = new AssortedImage('petsweep', '.img/assets lab 11/pet-sweep.jpg');
-let scissors = new AssortedImage('scissors', '.img/assets lab 11/scissors.jpg');
-let shark = new AssortedImage('shark', '.img/assets lab 11/shark.jpg');
-let sweep = new AssortedImage('sweep', '.img/asserts lab 11/sweep.jpg');
-let tauntaun = new AssortedImage('tauntaun', '.img/assets lab 11/tauntaun.jpg');
-let unicorn = new AssortedImage('unicorn', '.img/assets lab 11/unicorn.jpg');
-let watercan = new AssortedImage('watercan','.img/assets lab 11/water-can.jpg');
-let wineglass = new AssortedImage('wineglass', '.img/assets lab 11/wine-glass.jpg');
+let bag = new AssortedImage('bag', 'img/assets lab 11/bag.jpg' );
+let banana = new AssortedImage('banana', 'img/assets lab 11/banana.jpg');
+let bathroom = new AssortedImage('bathroom', 'img/assets lab 11/bathroom.jpg');
+let boots = new AssortedImage('boots', 'img/assets lab 11/boots.jpg' );
+let breakfast = new AssortedImage('breakfast', 'img/assets lab 11/breakfast.jpg');
+let bubblegum = new AssortedImage('bubblegum', 'img/assets lab 11/bubblegum.jpg');
+let chair = new AssortedImage('chair', 'img/assets lab 11/chair.jpg');
+let cthulhu = new AssortedImage('cthulhu', 'img/assets lab 11/cthulhu.jpg');
+let dogduck = new AssortedImage('dogduck', 'img/assets lab 11/dog-duck.jpg');
+let dragon = new AssortedImage('dragon', 'img/assets lab 11/dragon.jpg');
+let pen = new AssortedImage('pen', 'img/assets lab 11/pen.jpg');
+let petsweep = new AssortedImage('petsweep', 'img/assets lab 11/pet-sweep.jpg');
+let scissors = new AssortedImage('scissors', 'img/assets lab 11/scissors.jpg');
+let shark = new AssortedImage('shark', 'img/assets lab 11/shark.jpg');
+let sweep = new AssortedImage('sweep', 'img/assets lab 11/sweep.jpg');
+let tauntaun = new AssortedImage('tauntaun', 'img/assets lab 11/tauntaun.jpg');
+let unicorn = new AssortedImage('unicorn', 'img/assets lab 11/unicorn.jpg');
+let watercan = new AssortedImage('watercan','img/assets lab 11/water-can.jpg');
+let wineglass = new AssortedImage('wineglass', 'img/assets lab 11/wine-glass.jpg');
  
 const photos = [bag, banana, bathroom, boots, breakfast, bubblegum, chair, cthulhu, dogduck, dragon, pen, petsweep, scissors, shark, sweep, tauntaun, unicorn, watercan, wineglass];
 
@@ -44,6 +44,17 @@ shuffleArray(photos);
 // second image in the middle
 // third image on the right 
 function renderPhotos() { 
+// checkif clicks  has reached the max
+  if(clickCtr == maxClicks) {
+    viewResults.addEventListener('click', handleViewResultsClick);
+  
+
+// disable the images
+leftImg.removeEventListener('click', handleLeftClick);
+middleImg.removeEventListener('click', handleMiddleClick);
+lastImg.removeEventListener('click', handleLastClick);
+  }
+
 if (workingPhotos.length <= 1) {
   workingPhotos = photos.slice();  
   shuffleArray(workingPhotos);
@@ -51,14 +62,14 @@ if (workingPhotos.length <= 1) {
 
 // retrieves and removes the last item
 
-leftProduct = photos.pop; 
-leftImg.setAttribute('src', leftImg.src);
+leftProduct = photos.pop(); 
+leftImg.setAttribute('src', leftProduct.src);
  
 middleProduct = photos.pop();
-middleImg.setAttribute('src', middleImg.src);
+middleImg.setAttribute('src', middleProduct.src);
 
 lastProduct = photos.pop();
-lastImg.setAttribute('src', lastImg.src);
+lastImg.setAttribute('src', lastProduct.src);
 
 
 leftProduct.views += 1; 
@@ -97,6 +108,8 @@ renderPhotos();
  function renderResults() {
   for (let i=0; i<photos.length; i++) {
   const currentPhoto = photos[i];
-  console.log(currentPhoto.name + '-' + currentPhoto.views + ':' + currentPhoto.clicks);
- }
+  let result = `${currentPhoto.name} had ${currentPhoto.views} views and was clicked ${currentPhoto.clicks} times.`;
+  console.log
+
+}
 }
