@@ -2,7 +2,11 @@
 const leftImg = document.querySelector('section img:first-child');
 const middleImg = document.querySelector('section img:nth-child(2)');
 const lastImg = document.querySelector('section img:nth-child(3)');
-const workingPhotos = [];
+let workingPhotos = [];
+let leftProduct = null;
+let middleProduct = null;
+let lastProduct = null;
+
 
 function AssortedImage(name, src, ) {
   this.name = name;
@@ -35,27 +39,33 @@ const photos = [bag, banana, bathroom, boots, breakfast, bubblegum, chair, cthul
 
 shuffleArray(photos);
 
-renderPhotos();
+
 // first image on the left
 // second image in the middle
 // third image on the right 
 function renderPhotos() { 
-if (photos.length <= 1) {
+if (workingPhotos.length <= 1) {
   workingPhotos = photos.slice();  
   shuffleArray(workingPhotos);
 }
 
+// retrieves and removes the last item
 
-const leftProduct = photos.pop; 
+leftProduct = photos.pop; 
 leftImg.setAttribute('src', leftImg.src);
  
-const middleProduct = photos.pop();
+middleProduct = photos.pop();
 middleImg.setAttribute('src', middleImg.src);
 
-const lastProduct= photos.pop();
+lastProduct = photos.pop();
 lastImg.setAttribute('src', lastImg.src);
-} 
 
+
+leftProduct.views += 1; 
+middleProduct.view += 1;
+lastProduct.view =+ 1;
+
+}
 // Fisher-Yates shuffle array 
 function shuffleArray(array) {
   for (let i = array.length - 1; i > 0; i--) {
@@ -67,14 +77,26 @@ function shuffleArray(array) {
   }
 }
 function handleLeftClick() {
+  leftProductclicks += 1;
   renderPhotos();
 }
 function handleMiddleClick() {
+  middleProduct.clicks += 1;
   renderPhotos();
 }
 function handleLastClick() {
+  lastProduct.clicks += 1;
   renderPhotos();
 }
 leftImg.addEventListener('click', handleLeftClick);
 middleImg.addEventListener('click', handleMiddleClick);
 lastImg.addEventListener('click', handleLastClick);
+
+renderPhotos();
+
+ function renderResults() {
+  for (let i=0; i<photos.length; i++) {
+  const currentPhoto = photos[i];
+  console.log(currentPhoto.name + '-' + currentPhoto.views + ':' + currentPhoto.clicks);
+ }
+}
