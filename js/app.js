@@ -3,8 +3,8 @@ const leftImg = document.querySelector('section img:first-child');
 const middleImg = document.querySelector('section img:nth-child(2)');
 const lastImg = document.querySelector('section img:nth-child(3)');
 const showResultsButton = document.querySelector('button');
+const resultsContainer = document.querySelector('ul');
 let workingPhotos = [];
-const ulElem = document.querySelector('ul');
 let leftProduct = null;
 let middleProduct = null;
 let lastProduct = null;
@@ -19,10 +19,10 @@ function AssortedImage(name, src) {
   this.clicks = 0;
 }
 
-let bag = new AssortedImage('bag', 'img/assets lab 11/bag.jpg' );
+let bag = new AssortedImage('bag', 'img/assets lab 11/bag.jpg');
 let banana = new AssortedImage('banana', 'img/assets lab 11/banana.jpg');
 let bathroom = new AssortedImage('bathroom', 'img/assets lab 11/bathroom.jpg');
-let boots = new AssortedImage('boots', 'img/assets lab 11/boots.jpg' );
+let boots = new AssortedImage('boots', 'img/assets lab 11/boots.jpg');
 let breakfast = new AssortedImage('breakfast', 'img/assets lab 11/breakfast.jpg');
 let bubblegum = new AssortedImage('bubblegum', 'img/assets lab 11/bubblegum.jpg');
 let chair = new AssortedImage('chair', 'img/assets lab 11/chair.jpg');
@@ -36,9 +36,9 @@ let shark = new AssortedImage('shark', 'img/assets lab 11/shark.jpg');
 let sweep = new AssortedImage('sweep', 'img/assets lab 11/sweep.png');
 let tauntaun = new AssortedImage('tauntaun', 'img/assets lab 11/tauntaun.jpg');
 let unicorn = new AssortedImage('unicorn', 'img/assets lab 11/unicorn.jpg');
-let watercan = new AssortedImage('watercan','img/assets lab 11/water-can.jpg');
+let watercan = new AssortedImage('watercan', 'img/assets lab 11/water-can.jpg');
 let wineglass = new AssortedImage('wineglass', 'img/assets lab 11/wine-glass.jpg');
- 
+
 const photos = [bag, banana, bathroom, boots, breakfast, bubblegum, chair, cthulhu, dogduck, dragon, pen, petsweep, scissors, shark, sweep, tauntaun, unicorn, watercan, wineglass];
 
 shuffleArray(photos);
@@ -47,38 +47,42 @@ shuffleArray(photos);
 // first image on the left
 // second image in the middle
 // third image on the right 
-function renderPhotos() { 
-// checkif clicks  has reached the max
-  if(clickCtr == maxClicks) {
-    viewResults.addEventListener('click', handleResultsClick);
+function renderPhotos() {
+  // checkif clicks  has reached the max
+  console.log(clickCtr);
+  if (clickCtr == maxClicks) {
+    showResultsButton.style.display = 'block'
   
 
-// disable the images
-leftImg.removeEventListener('click', handleLeftClick);
-middleImg.removeEventListener('click', handleMiddleClick);
-lastImg.removeEventListener('click', handleLastClick);
+
+    // disable the images
+    leftImg.removeEventListener('click', handleLeftClick);
+    middleImg.removeEventListener('click', handleMiddleClick);
+    lastImg.removeEventListener('click', handleLastClick);
   }
 
-if (workingPhotos.length <= 1) {
-  workingPhotos = photos.slice();  
-  shuffleArray(workingPhotos);
-}
+  showResultsButton.addEventListener('click', handleViewResultsClick);
 
-// retrieves and removes the last item
+  if (workingPhotos.length <= 1) {
+    workingPhotos = photos.slice();
+    shuffleArray(workingPhotos);
+  }
 
-leftProduct = workingPhotos.pop(); 
-leftImg.setAttribute('src', leftProduct.src);
- 
-middleProduct = workingPhotos.pop();
-middleImg.setAttribute('src', middleProduct.src);
+  // retrieves and removes the last item
 
-lastProduct = workingPhotos.pop();
-lastImg.setAttribute('src', lastProduct.src);
+  leftProduct = workingPhotos.pop();
+  leftImg.setAttribute('src', leftProduct.src);
+
+  middleProduct = workingPhotos.pop();
+  middleImg.setAttribute('src', middleProduct.src);
+
+  lastProduct = workingPhotos.pop();
+  lastImg.setAttribute('src', lastProduct.src);
 
 
-leftProduct.views += 1; 
-middleProduct.views += 1;
-lastProduct.views += 1;
+  leftProduct.views += 1;
+  middleProduct.views += 1;
+  lastProduct.views += 1;
 
 }
 // Fisher-Yates shuffle array- ChatGPT 
@@ -87,25 +91,31 @@ function shuffleArray(array) {
     // Generate a random index from 0 to i
     const j = Math.floor(Math.random() * (i + 1));
 
+
     // Swap elements at indices i and j
     [array[i], array[j]] = [array[j], array[i]];
   }
 }
 function handleLeftClick() {
   leftProduct.clicks += 1;
+  clickCtr++
+  console.log(photos);
   renderPhotos();
 }
 function handleMiddleClick() {
   middleProduct.clicks += 1;
+  clickCtr++
   renderPhotos();
 }
 function handleLastClick() {
   lastProduct.clicks += 1;
+  clickCtr++
   renderPhotos();
 }
 
-function handleResultsClick() {
+function handleViewResultsClick() {
   renderResults();
+  showResultsButton.style.display = 'none';
 }
 
 
@@ -115,16 +125,16 @@ lastImg.addEventListener('click', handleLastClick);
 
 renderPhotos();
 
- function renderResults() {
-  for (let i=0; i<photos.length; i++) {
-  const currentPhoto = photos[i];
-  let result = `${currentPhoto.name} had ${currentPhoto.views} views and was clicked ${currentPhoto.clicks} times.`;
-  console.log(result);
-  const liElement = document.createElement('li');
-  ulElem.appendChild(liElement);
-  liElement.textContent = result;
+
+function renderResults() {
+  for (let i = 0; i < photos.length; i++) {
+    const currentPhoto = photos[i];
+    let result = `${currentPhoto.name} had ${currentPhoto.views} views and was clicked ${currentPhoto.clicks} times.`;
+    console.log(result);
+    const liElement = document.createElement('li');
+    resultsContainer.appendChild(liElement);
+    liElement.textContent = result;
 
   }
-}  
-
+}
 
