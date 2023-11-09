@@ -108,7 +108,7 @@ function handleLastClick() {
 }
 
 function handleViewResultsClick() {
-  renderResults();
+  renderChart();
   showResultsButton.style.display = 'none';
 }
 
@@ -116,6 +116,68 @@ function initEventListener() {
   leftImg.addEventListener('click', handleLeftClick);
   middleImg.addEventListener('click', handleMiddleClick);
   lastImg.addEventListener('click', handleLastClick);
+}
+
+function renderChart() {
+  let photoNames = [];
+  let photoLikes = [];
+  let photoViews = [];
+
+
+  for (let i = 0; i < AssortedImage.allPhotos.length; i++){
+    const currentPhoto = AssortedImage.allPhotos[i];
+    const photoName = currentPhoto.name;
+    const photoLikesCount = currentPhoto.clicks
+    const photoViewsCount = currentPhoto.views;
+    
+    photoNames.push(photoName);
+    photoLikes.push(photoLikesCount);
+    photoViews.push(photoViewsCount);
+  }
+
+ /* refer to Chart.js > Chart Types > Bar Chart:
+  https://www.chartjs.org/docs/latest/charts/bar.html
+  and refer to Chart.js > Getting Started > Getting Started:
+  https://www.chartjs.org/docs/latest/getting-started/ */
+const data = {
+  labels: photoNames,
+  datasets: [{
+    label: 'Likes',
+    data: photoLikes,
+    backgroundColor: [
+      'rgba(255, 99, 132, 0.2)'
+    ],
+    borderColor: [
+      'rgb(255, 99, 132)'
+    ],
+    borderWidth: 1
+  },
+  {
+    label: 'Views',
+    data: photoViews,
+    backgroundColor: [
+      'rgba(255, 159, 64, 0.2)'
+    ],
+    borderColor: [
+      'rgb(255, 159, 64)'
+    ],
+    borderWidth: 1
+  }]
+};
+
+const config = {
+  type: 'bar',
+  data: data,
+  options: {
+    scales: {
+      y: {
+        beginAtZero: true
+      }
+    }
+  },
+};
+let canvasChart = document.getElementById('myChart');
+const myChart = new Chart(canvasChart, config);
 }
 
 
