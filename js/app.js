@@ -1,15 +1,15 @@
 'use strict';
+const productNames = ['bag', 'banana', 'bathroom', 'boots', 'breakfast', 'bubblegum', 'chair', 'cthulhu', 'dog-duck', 'dragon', 'pen', 'pet-sweep', 'scissors', 'shark', 'sweep', 'tauntaun', 'unicorn', 'water-can', 'wine-glass'];
 const leftImg = document.querySelector('section img:first-child');
 const middleImg = document.querySelector('section img:nth-child(2)');
 const lastImg = document.querySelector('section img:nth-child(3)');
 const showResultsButton = document.querySelector('button');
-const resultsContainer = document.querySelector('ul');
-let workingPhotos = [];
 let leftProduct = null;
 let middleProduct = null;
 let lastProduct = null;
 let clickCtr = 0;
-let maxClicks = 25;
+const maxClicks = 25;
+
 
 
 function AssortedImage(name, src) {
@@ -19,65 +19,58 @@ function AssortedImage(name, src) {
   this.clicks = 0;
 }
 
-let bag = new AssortedImage('bag', 'img/assets lab 11/bag.jpg');
-let banana = new AssortedImage('banana', 'img/assets lab 11/banana.jpg');
-let bathroom = new AssortedImage('bathroom', 'img/assets lab 11/bathroom.jpg');
-let boots = new AssortedImage('boots', 'img/assets lab 11/boots.jpg');
-let breakfast = new AssortedImage('breakfast', 'img/assets lab 11/breakfast.jpg');
-let bubblegum = new AssortedImage('bubblegum', 'img/assets lab 11/bubblegum.jpg');
-let chair = new AssortedImage('chair', 'img/assets lab 11/chair.jpg');
-let cthulhu = new AssortedImage('cthulhu', 'img/assets lab 11/cthulhu.jpg');
-let dogduck = new AssortedImage('dogduck', 'img/assets lab 11/dog-duck.jpg');
-let dragon = new AssortedImage('dragon', 'img/assets lab 11/dragon.jpg');
-let pen = new AssortedImage('pen', 'img/assets lab 11/pen.jpg');
-let petsweep = new AssortedImage('petsweep', 'img/assets lab 11/pet-sweep.jpg');
-let scissors = new AssortedImage('scissors', 'img/assets lab 11/scissors.jpg');
-let shark = new AssortedImage('shark', 'img/assets lab 11/shark.jpg');
-let sweep = new AssortedImage('sweep', 'img/assets lab 11/sweep.png');
-let tauntaun = new AssortedImage('tauntaun', 'img/assets lab 11/tauntaun.jpg');
-let unicorn = new AssortedImage('unicorn', 'img/assets lab 11/unicorn.jpg');
-let watercan = new AssortedImage('watercan', 'img/assets lab 11/water-can.jpg');
-let wineglass = new AssortedImage('wineglass', 'img/assets lab 11/wine-glass.jpg');
+AssortedImage.allPhotos = [];
+AssortedImage.workingPhotos = [];
 
-const photos = [bag, banana, bathroom, boots, breakfast, bubblegum, chair, cthulhu, dogduck, dragon, pen, petsweep, scissors, shark, sweep, tauntaun, unicorn, watercan, wineglass];
-
-shuffleArray(photos);
-
+function initPhotos() {
+  for (let photoName of productNames) {
+    const currentPhoto = new AssortedImage(photoName, `img/assets lab 11/${photoName}.jpg`);
+    AssortedImage.allPhotos.push(currentPhoto);
+  }
+}
 
 // first image on the left
 // second image in the middle
 // third image on the right 
 function renderPhotos() {
-  // checkif clicks  has reached the max
+  // check if clicks  has reached the max
   console.log(clickCtr);
   if (clickCtr == maxClicks) {
-    showResultsButton.style.display = 'block'
-  
+    endVoting();
+    return;
 
-
-    // disable the images
-    leftImg.removeEventListener('click', handleLeftClick);
-    middleImg.removeEventListener('click', handleMiddleClick);
-    lastImg.removeEventListener('click', handleLastClick);
   }
 
-  showResultsButton.addEventListener('click', handleViewResultsClick);
 
-  if (workingPhotos.length <= 1) {
-    workingPhotos = photos.slice();
-    shuffleArray(workingPhotos);
+  if (AssortedImage.workingPhotos.length < 3) {
+    AssortedImage.workingPhotos = AssortedImage.allPhotos.slice();
+    shuffleArray(AssortedImage.workingPhotos);
   }
+
+  let leftOver = null;
+  if (AssortedImage.workingPhotos.length === 1);
+  leftOver = AssortedImage.workingPhotos[0];
+
+  if (AssortedImage.workingPhotos.length <= 1)
+  shuffleArray(AssortedImage.workingPhotos);
+
+  if (leftOver) {
+    removeItem(AssortedImage.workingPhotos, leftOver)
+    AssortedImage.workingPhotos.push(leftOver)
+  }
+
 
   // retrieves and removes the last item
 
-  leftProduct = workingPhotos.pop();
+  leftProduct = AssortedImage.workingPhotos.pop();
   leftImg.setAttribute('src', leftProduct.src);
 
-  middleProduct = workingPhotos.pop();
+  middleProduct = AssortedImage.workingPhotos.pop();
   middleImg.setAttribute('src', middleProduct.src);
 
-  lastProduct = workingPhotos.pop();
+  lastProduct = AssortedImage.workingPhotos.pop();
   lastImg.setAttribute('src', lastProduct.src);
+
 
 
   leftProduct.views += 1;
@@ -85,21 +78,46 @@ function renderPhotos() {
   lastProduct.views += 1;
 
 }
+
+function removeItem(array, item) {
+  const index =array.indexOf(item);
+  if(index != -1) {
+    array.splice(index,1);
+  }
+}
+
+
+// disable the images
+function endVoting() {
+  leftImg.removeEventListener('click', handleLeftClick);
+  middleImg.removeEventListener('click', handleMiddleClick);
+  lastImg.removeEventListener('click', handleLastClick);
+
+  showResultsButton.hidden = false;
+  showResultsButton.addEventListener('click', handleViewResultsClick);
+  showResultsButton.style.display = 'block'
+
+}
+function handleShowResultsButton() {
+  renderResults();
+  showResultsButton.style.display = 'none';
+
+}
 // Fisher-Yates shuffle array- ChatGPT 
 function shuffleArray(array) {
   for (let i = array.length - 1; i > 0; i--) {
     // Generate a random index from 0 to i
     const j = Math.floor(Math.random() * (i + 1));
-
-
     // Swap elements at indices i and j
     [array[i], array[j]] = [array[j], array[i]];
   }
 }
+
+
 function handleLeftClick() {
   leftProduct.clicks += 1;
   clickCtr++
-  console.log(photos);
+  console.log(productNames);
   renderPhotos();
 }
 function handleMiddleClick() {
@@ -114,27 +132,98 @@ function handleLastClick() {
 }
 
 function handleViewResultsClick() {
-  renderResults();
+  renderChart();
   showResultsButton.style.display = 'none';
 }
 
+function initEventListener() {
+  leftImg.addEventListener('click', handleLeftClick);
+  middleImg.addEventListener('click', handleMiddleClick);
+  lastImg.addEventListener('click', handleLastClick);
+}
 
-leftImg.addEventListener('click', handleLeftClick);
-middleImg.addEventListener('click', handleMiddleClick);
-lastImg.addEventListener('click', handleLastClick);
+function renderChart() {
+  let photoNames = [];
+  let photoLikes = [];
+  let photoViews = [];
 
-renderPhotos();
+
+  for (let i = 0; i < AssortedImage.allPhotos.length; i++) {
+    const currentPhoto = AssortedImage.allPhotos[i];
+    const photoName = currentPhoto.name;
+    const photoLikesCount = currentPhoto.clicks
+    const photoViewsCount = currentPhoto.views;
+
+    photoNames.push(photoName);
+    photoLikes.push(photoLikesCount);
+    photoViews.push(photoViewsCount);
+  }
+
+  /* refer to Chart.js > Chart Types > Bar Chart:
+   https://www.chartjs.org/docs/latest/charts/bar.html
+   and refer to Chart.js > Getting Started > Getting Started:
+   https://www.chartjs.org/docs/latest/getting-started/ */
+  const data = {
+    labels: photoNames,
+    datasets: [{
+      label: 'Likes',
+      data: photoLikes,
+      backgroundColor: [
+        'rgba(92, 185, 255, 0.2)'
+      ],
+      borderColor: [
+        'rgb(92, 185, 255)'
+      ],
+      borderWidth: 1
+    },
+    {
+      label: 'Views',
+      data: photoViews,
+      backgroundColor: [
+        'rgba(255, 159, 64, 0.2)'
+      ],
+      borderColor: [
+        'rgb(255, 159, 64)'
+      ],
+      borderWidth: 1
+    }]
+  };
+
+  const config = {
+    type: 'bar',
+    data: data,
+    options: {
+      scales: {
+        y: {
+          beginAtZero: true
+        }
+      }
+    },
+  };
+  let canvasChart = document.getElementById('myChart');
+  const myChart = new Chart(canvasChart, config);
+}
+
 
 
 function renderResults() {
-  for (let i = 0; i < photos.length; i++) {
-    const currentPhoto = photos[i];
+  const resultsContainer = document.querySelector('ul');
+  for (let currentPhoto of AssortedImage.allPhotos) {
     let result = `${currentPhoto.name} had ${currentPhoto.views} views and was clicked ${currentPhoto.clicks} times.`;
-    console.log(result);
     const liElement = document.createElement('li');
     resultsContainer.appendChild(liElement);
     liElement.textContent = result;
 
   }
 }
+
+function startApp() {
+  initPhotos();
+  initEventListener();
+  renderPhotos();
+
+
+}
+
+startApp();
 
