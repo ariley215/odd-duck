@@ -38,7 +38,7 @@ function renderPhotos() {
   if (clickCtr == maxClicks) {
     endVoting();
     return;
- 
+
   }
 
 
@@ -46,6 +46,19 @@ function renderPhotos() {
     AssortedImage.workingPhotos = AssortedImage.allPhotos.slice();
     shuffleArray(AssortedImage.workingPhotos);
   }
+
+  let leftOver = null;
+  if (AssortedImage.workingPhotos.length === 1);
+  leftOver = AssortedImage.workingPhotos[0];
+
+  if (AssortedImage.workingPhotos.length <= 1)
+  shuffleArray(AssortedImage.workingPhotos);
+
+  if (leftOver) {
+    removeItem(AssortedImage.workingPhotos, leftOver)
+    AssortedImage.workingPhotos.push(leftOver)
+  }
+
 
   // retrieves and removes the last item
 
@@ -59,11 +72,20 @@ function renderPhotos() {
   lastImg.setAttribute('src', lastProduct.src);
 
 
+
   leftProduct.views += 1;
   middleProduct.views += 1;
   lastProduct.views += 1;
 
 }
+
+function removeItem(array, item) {
+  const index =array.indexOf(item);
+  if(index != -1) {
+    array.splice(index,1);
+  }
+}
+
 
 // disable the images
 function endVoting() {
@@ -73,12 +95,12 @@ function endVoting() {
 
   showResultsButton.hidden = false;
   showResultsButton.addEventListener('click', handleViewResultsClick);
-  showResultsButton.style.display = 'block' 
+  showResultsButton.style.display = 'block'
 
 }
 function handleShowResultsButton() {
   renderResults();
-showResultsButton.style.display = 'none';
+  showResultsButton.style.display = 'none';
 
 }
 // Fisher-Yates shuffle array- ChatGPT 
@@ -90,6 +112,8 @@ function shuffleArray(array) {
     [array[i], array[j]] = [array[j], array[i]];
   }
 }
+
+
 function handleLeftClick() {
   leftProduct.clicks += 1;
   clickCtr++
@@ -124,60 +148,60 @@ function renderChart() {
   let photoViews = [];
 
 
-  for (let i = 0; i < AssortedImage.allPhotos.length; i++){
+  for (let i = 0; i < AssortedImage.allPhotos.length; i++) {
     const currentPhoto = AssortedImage.allPhotos[i];
     const photoName = currentPhoto.name;
     const photoLikesCount = currentPhoto.clicks
     const photoViewsCount = currentPhoto.views;
-    
+
     photoNames.push(photoName);
     photoLikes.push(photoLikesCount);
     photoViews.push(photoViewsCount);
   }
 
- /* refer to Chart.js > Chart Types > Bar Chart:
-  https://www.chartjs.org/docs/latest/charts/bar.html
-  and refer to Chart.js > Getting Started > Getting Started:
-  https://www.chartjs.org/docs/latest/getting-started/ */
-const data = {
-  labels: photoNames,
-  datasets: [{
-    label: 'Likes',
-    data: photoLikes,
-    backgroundColor: [
-      'rgba(255, 99, 132, 0.2)'
-    ],
-    borderColor: [
-      'rgb(255, 99, 132)'
-    ],
-    borderWidth: 1
-  },
-  {
-    label: 'Views',
-    data: photoViews,
-    backgroundColor: [
-      'rgba(255, 159, 64, 0.2)'
-    ],
-    borderColor: [
-      'rgb(255, 159, 64)'
-    ],
-    borderWidth: 1
-  }]
-};
+  /* refer to Chart.js > Chart Types > Bar Chart:
+   https://www.chartjs.org/docs/latest/charts/bar.html
+   and refer to Chart.js > Getting Started > Getting Started:
+   https://www.chartjs.org/docs/latest/getting-started/ */
+  const data = {
+    labels: photoNames,
+    datasets: [{
+      label: 'Likes',
+      data: photoLikes,
+      backgroundColor: [
+        'rgba(255, 99, 132, 0.2)'
+      ],
+      borderColor: [
+        'rgb(255, 99, 132)'
+      ],
+      borderWidth: 1
+    },
+    {
+      label: 'Views',
+      data: photoViews,
+      backgroundColor: [
+        'rgba(255, 159, 64, 0.2)'
+      ],
+      borderColor: [
+        'rgb(255, 159, 64)'
+      ],
+      borderWidth: 1
+    }]
+  };
 
-const config = {
-  type: 'bar',
-  data: data,
-  options: {
-    scales: {
-      y: {
-        beginAtZero: true
+  const config = {
+    type: 'bar',
+    data: data,
+    options: {
+      scales: {
+        y: {
+          beginAtZero: true
+        }
       }
-    }
-  },
-};
-let canvasChart = document.getElementById('myChart');
-const myChart = new Chart(canvasChart, config);
+    },
+  };
+  let canvasChart = document.getElementById('myChart');
+  const myChart = new Chart(canvasChart, config);
 }
 
 
