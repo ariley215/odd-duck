@@ -9,6 +9,7 @@ let middleProduct = null;
 let lastProduct = null;
 let clickCtr = 0;
 const maxClicks = 25;
+const productStorageKey = 'product-storage-key';
 
 
 
@@ -48,7 +49,7 @@ function renderPhotos() {
   }
 
   let leftOver = null;
-  if (AssortedImage.workingPhotos.length === 1);
+  if (AssortedImage.workingPhotos.length === 1)
   leftOver = AssortedImage.workingPhotos[0];
 
   if (AssortedImage.workingPhotos.length <= 1)
@@ -77,12 +78,40 @@ function renderPhotos() {
   middleProduct.views += 1;
   lastProduct.views += 1;
 
+  // store updated data in local storage 
+  storeProducts();
 }
 
-function removeItem(array, item) {
-  const index =array.indexOf(item);
+
+function storeProducts() {
+  localStorage.setItem(productStorageKey, JSON.stringify(AssortedImage.allPhotos));
+}
+
+
+function loadProducts() {
+  const storedProductText = localStorage.getItem(productStorageKey);
+
+  if(storedProductText) {
+    parseStoredProducts(storedProductText);
+  } else {
+    initPhotos();
+  }
+}
+
+function parseStoredProducts(storedProductText) {
+const storedProductObjects = JSON.parse(storedProductText);
+
+AssortedImage.allPhotos.length = 0;
+
+for (let productObject of storedProductObjects) {
+  const currentPhoto = new AssortedImage(productObject.name, productObject.src, productObject.views, productObject.clicks);
+  AssortedImage.allPhotos.push(currentPhoto);
+}
+}
+function removeItem(arr, item) {
+  const index = arr.indexOf(item);
   if(index != -1) {
-    array.splice(index,1);
+    arr.splice(index,1);
   }
 }
 
@@ -218,6 +247,7 @@ function renderResults() {
 }
 
 function startApp() {
+  loadProducts();
   initPhotos();
   initEventListener();
   renderPhotos();
